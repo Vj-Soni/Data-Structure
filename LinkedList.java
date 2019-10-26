@@ -37,7 +37,16 @@ class LinkedList{
         length++;
     }
 
-    public void delete(int data){
+    /*  
+        first check if head(first node) has the 
+        required data if true then remove that node 
+        by moving head to next node.
+        else using current pointer check if next node
+        data is required data if true then remove its
+        link from previous node thus result in removing
+        of that node.
+    */ 
+    public void remove(int data){
         if(head==null)return;
         Node current = head;
         if(head.data==data){
@@ -56,6 +65,32 @@ class LinkedList{
         }
     }
 
+    /*
+        using for loop to move current pointer 1 less then
+        required index then linking to next node thus removing
+        node from position.
+    */
+    public void delete(int index){
+        if(head==null)return;
+        if(index==1){
+            head = head.next;
+            length--;
+            return;
+        }
+        Node current = head;
+        for(int i=1;i<index-1;i++){
+            current = current.next;
+        }
+        current.next = current.next.next;
+        length--;
+    }
+
+    /*
+        using two pointer one slow that is increment
+        by one node second fast incremented by 2 node each 
+        time when fast reach the end slow will be at the middle 
+        of linkedlist
+    */
     public void middle(){
         if(head==null)return;
         
@@ -94,6 +129,17 @@ class LinkedList{
         for(int i=1;i<length-k+1;i++){
             current = current.next;
             
+        }
+        System.out.println(current.data);
+    }
+
+    /* using for loop to move current pointer to required
+        index */
+    public void show(int n){
+        if(head==null)return;
+        Node current = head;
+        for(int i=1;i<n;i++){
+            current = current.next;
         }
         System.out.println(current.data);
     }
