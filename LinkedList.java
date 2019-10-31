@@ -1,16 +1,31 @@
 import java.util.*;
-import java.io.*;
 
 class LinkedList{
     static class Node{
-        private Node next;
         private int data;
-        Node(int data){
-            this.data=data;
+        private Node next;
+        public Node(int data){
+            this.data = data;
+        }
+        public int getData(){
+            return data;
+        }
+
+        public Node getNext(){
+            return next;
+        }
+        public void setNext(Node n){
+            next = n;
+        }
+        public void setData(int data){
+            this.data = data;
         }
     }
     Node head;
     private int length;
+    public Node getHead(){
+        return head;
+    }
     public void add(int data){
         if(head==null){
             head = new Node(data);
@@ -105,6 +120,21 @@ class LinkedList{
         
     }
 
+    public void deleteMiddle(){
+        if(head==null)return;
+
+        Node slow =  head;
+        Node fast =  head;
+        Node previous = null;
+        while(fast!=null && fast.next!=null){
+            previous = slow;
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        previous.next = slow.next;
+        
+    }
+
     public void distinct(){
         if(head==null)return;
         HashSet<Integer> set = new HashSet<>();
@@ -133,6 +163,89 @@ class LinkedList{
         System.out.println(current.data);
     }
 
+    /*
+        Iterative method
+        reversing links
+    */
+    public void reverse(){
+        if(head==null)return;
+        Node current = head;
+        Node previous = null;
+        Node next = current.next;
+        while(current!=null){
+            next = current.next;
+            current.next = previous;
+            previous = current;
+            current = next;
+        }
+       
+        head = previous;
+    }
+
+    public Node reverse(Node mid){
+        Node previous = null;
+        while(mid!=null){
+            Node n = new Node(mid.data);
+            n.next = previous;
+            previous =n; 
+            mid = mid.next;
+        }
+        return previous;
+
+    }
+    public Boolean isPlaindrome(){
+        Node reverse = reverse(head);
+        return isEqual(head,reverse);
+    }
+
+    public Boolean isEqual(Node head , Node reversed){
+        while(head!=null && reversed!=null)
+        {
+            if(head.data!=reversed.data)
+                return false;
+                head = head.next;
+                reversed = reversed.next;
+        }
+        return head==null && reversed==null;
+    }
+
+    /* creating looop*/
+    public void createLoop(){
+        Node current  = head;
+        while(current.next!=null){
+            current = current.next;
+        }
+
+        current.next = head.next.next.next;
+    }
+
+    /* 
+        checking loop
+    */
+    public Node loop(){
+        Node slow = head;
+        Node fast = head;
+        while(fast!=null && fast.next!=null){
+            slow = slow.next;
+            fast = fast.next.next;
+            if(slow==fast)
+                break;
+        }
+
+        if(fast==null || fast.next==null)
+            return null;
+        
+        slow=head;
+        while(slow!=fast){
+            slow = slow.next;
+            fast = fast.next;
+        }
+        return slow;
+    }
+
+
+
+
     /* using for loop to move current pointer to required
         index */
     public void show(int n){
@@ -157,4 +270,56 @@ class LinkedList{
     public int size(){
         return length;
     }
+
+    /*****************************************************/
+    public Node intersection(Node list1 , Node list2){
+        if(list1==null || list2==null)
+            return null;
+        Result tail1 = getSizeAndTail(list1);
+        Result tail2 = getSizeAndTail(list2);
+
+        if(tail1.tail != tail2.tail)
+            return null;
+
+        Node shorter = tail1.size<tail2.size ? list1 : list2;
+        Node longer = tail1.size<tail2.size ? list2 : list1;
+
+        longer = getKthNode(longer,Math.abs(tail1.size - tail2.size));  
+
+        while(shorter!=longer){
+            shorter = shorter.next;  
+            longer = longer.next;
+        }
+        return shorter;
+    }
+
+    public Node getKthNode(Node longer , int k) {
+        Node current = longer;
+        while(k>0 && current!=null){
+            current = current.next;
+            k--;
+        }
+        return current;
+    }
+
+    static class Result{
+        int size;
+        Node tail;
+        public Result(Node res, int size){
+            this.size = size;
+            this.tail = res;
+        }
+    }
+
+    public Result getSizeAndTail(Node list){
+        int size = 1;
+        Node current = list;
+        while(current.next!=null)
+        {
+            size++;
+            current = current.next;
+        }
+        return new Result(current,size);
+    }
+    /************************************************/
 }
